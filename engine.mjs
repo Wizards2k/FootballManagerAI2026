@@ -1,3 +1,4 @@
+import { PLAYER, BALL } from './geometry.mjs';
 const clamp = (n,a,b) => Math.max(a,Math.min(b,n));
 const distance = (a,b) => Math.hypot(a.x-b.x,a.y-b.y);
 const formation = [[5,34],[24,9],[21,26],[21,42],[24,59],[42,18],[38,34],[42,50],[63,10],[65,34],[63,58]];
@@ -56,7 +57,7 @@ export class Match {
       }
       return;
     }
-    this.ball.x=carrier.x+dir*.75;this.ball.y=carrier.y+.4;
+    this.ball.x=carrier.x+dir*(PLAYER.radius+BALL.radius+.12);this.ball.y=carrier.y+.1;
     if(this.cooldown>0)return;
     const nearest=this.players.filter(p=>p.team!==carrier.team&&p.number!==1).sort((a,b)=>distance(a,carrier)-distance(b,carrier))[0];
     if(distance(nearest,carrier)<2&&this.random()<.4){this.owner=this.players.indexOf(nearest);this.hold=0;this.cooldown=1.2;this.event(`Recupero dei ${nearest.team===0?'Bianchi':'Rossi'}: riparte l’azione.`,'turnover');return;}
