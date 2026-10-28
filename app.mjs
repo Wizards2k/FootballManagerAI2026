@@ -3,6 +3,9 @@ const $=id=>document.getElementById(id);
 const match=new Match();let paused=false,speed=1,last=0,accumulator=0,lastEvent=0,selected=null;const trail=[];
 const canvas=$('pitch'),ctx=canvas.getContext('2d');
 const colors=['#f5f3e9','#ed675e'];let view={};
+// Visual proportions from the horizontal reference: a ~14 px marker on
+// a ~920 px pitch. These are tactical symbols, not body measurements.
+const marker={radius:.8,stroke:.1,font:.82,ballRadius:.27};
 function pitch(){
   const w=canvas.clientWidth,h=canvas.clientHeight,dpr=window.devicePixelRatio||1;
   if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);}
@@ -26,14 +29,14 @@ function pitch(){
   if($('trails').checked&&trail.length>1){for(let i=1;i<trail.length;i++){ctx.strokeStyle=`rgba(255,246,204,${i/trail.length*.35})`;ctx.lineWidth=.28;ctx.beginPath();ctx.moveTo(trail[i-1].x,trail[i-1].y);ctx.lineTo(trail[i].x,trail[i].y);ctx.stroke();}}
   for(const p of [...match.players].sort((a,b)=>a.y-b.y)){
     const chosen=p===selected;const carrier=match.players[match.owner]===p&&!match.flight;
-    if(carrier||chosen){ctx.strokeStyle=chosen?'#f6d783':'#ffffff70';ctx.lineWidth=.23;circle(p.x,p.y,1.65);}
-    ctx.fillStyle='#0b1d1f55';ctx.beginPath();ctx.ellipse(p.x+.18,p.y+.6,1.2,.65,0,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle=p.number===1?(p.team===0?'#e8cb6b':'#8cb9e3'):colors[p.team];ctx.strokeStyle=p.team===0?'#29342c':'#652d2a';ctx.lineWidth=.23;
-    ctx.beginPath();ctx.arc(p.x,p.y,1.18,0,Math.PI*2);ctx.fill();ctx.stroke();
-    ctx.fillStyle=p.team===0?'#1c3027':'#fff4e9';ctx.font='bold 1.25px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(p.number,p.x,p.y+.05);
-    if($('names').checked||chosen){ctx.font='1.35px Arial';const label=`${p.team===0?'B':'R'} · ${p.role}`;const tw=ctx.measureText(label).width;ctx.fillStyle='#15251ed9';ctx.fillRect(p.x-tw/2-.6,p.y+1.7,tw+1.2,2.6);ctx.fillStyle='#f5f4df';ctx.fillText(label,p.x,p.y+3);}
+    if(carrier||chosen){ctx.strokeStyle=chosen?'#f6d783':'#ffffff70';ctx.lineWidth=.12;circle(p.x,p.y,1.08);}
+    ctx.fillStyle='#0b1d1f55';ctx.beginPath();ctx.ellipse(p.x+.12,p.y+.3,.78,.4,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=p.number===1?(p.team===0?'#e8cb6b':'#8cb9e3'):colors[p.team];ctx.strokeStyle=p.team===0?'#29342c':'#652d2a';ctx.lineWidth=marker.stroke;
+    ctx.beginPath();ctx.arc(p.x,p.y,marker.radius-marker.stroke/2,0,Math.PI*2);ctx.fill();ctx.stroke();
+    ctx.fillStyle=p.team===0?'#1c3027':'#fff4e9';ctx.font=`bold ${marker.font}px Arial`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(p.number,p.x,p.y+.03);
+    if($('names').checked||chosen){ctx.font='1.15px Arial';const label=`${p.team===0?'B':'R'}${p.number} · ${p.role}`;const tw=ctx.measureText(label).width;ctx.fillStyle='#15251ed9';ctx.fillRect(p.x-tw/2-.45,p.y+1.25,tw+.9,2);ctx.fillStyle='#f5f4df';ctx.fillText(label,p.x,p.y+2.25);}
   }
-  ctx.shadowColor='#0008';ctx.shadowBlur=2;ctx.fillStyle='#fff9d7';ctx.strokeStyle='#24312b';ctx.lineWidth=.14;ctx.beginPath();ctx.arc(match.ball.x,match.ball.y,.58,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;ctx.fillStyle='#314238';ctx.fillRect(match.ball.x-.15,match.ball.y-.15,.3,.3);
+  ctx.shadowColor='#0008';ctx.shadowBlur=1;ctx.fillStyle='#fff9d7';ctx.strokeStyle='#24312b';ctx.lineWidth=.08;ctx.beginPath();ctx.arc(match.ball.x,match.ball.y,marker.ballRadius-ctx.lineWidth/2,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;ctx.fillStyle='#314238';ctx.fillRect(match.ball.x-.07,match.ball.y-.07,.14,.14);
   if(paused){ctx.fillStyle='#12251b88';ctx.fillRect(0,0,105,68);ctx.fillStyle='#f5f3e9';ctx.textAlign='center';ctx.font='bold 3px Arial';ctx.fillText('PARTITA IN PAUSA',52.5,34);}
   ctx.restore();
 }

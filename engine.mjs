@@ -56,7 +56,7 @@ export class Match {
       }
       return;
     }
-    this.ball.x=carrier.x+dir*.75;this.ball.y=carrier.y+.4;
+    this.ball.x=carrier.x+dir*1.1;this.ball.y=carrier.y+.2;
     if(this.cooldown>0)return;
     const nearest=this.players.filter(p=>p.team!==carrier.team&&p.number!==1).sort((a,b)=>distance(a,carrier)-distance(b,carrier))[0];
     if(distance(nearest,carrier)<2&&this.random()<.4){this.owner=this.players.indexOf(nearest);this.hold=0;this.cooldown=1.2;this.event(`Recupero dei ${nearest.team===0?'Bianchi':'Rossi'}: riparte l’azione.`,'turnover');return;}

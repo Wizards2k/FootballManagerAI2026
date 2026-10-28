@@ -20,6 +20,8 @@ Aprire http://127.0.0.1:4173. `npm test` verifica una partita completa e le inva
 
 ## Struttura e limiti
 
+La vista usa le proporzioni grafiche del riferimento orizzontale fornito: il diametro esterno del pallino è circa l'1,52% della lunghezza del campo (14 px su un campo lungo 920 px), il pallone circa un terzo del pallino. Numeri, ombre e anelli di selezione sono stati adeguati. Queste dimensioni rappresentano simboli tattici leggibili, non l'ingombro fisico di una persona. Le proporzioni restano costanti al variare delle dimensioni del canvas e in modalità a schermo intero.
+
 `engine.mjs` gestisce lo stato della simulazione, indipendente dall’interfaccia. `app.mjs` disegna il campo su Canvas e collega i controlli; `style.css` definisce l’interfaccia. `server.mjs` serve i file per lo sviluppo locale.
 
 È una dimostrazione della vista partita, non ancora un motore calcistico realistico: passaggi e tiri usano probabilità semplificate; non sono implementati falli, fuorigioco, rimesse, sostituzioni, attributi individuali o campionati. Il possesso misura il tempo di controllo simulato. I portieri sono giallo e azzurro per distinguerli.
